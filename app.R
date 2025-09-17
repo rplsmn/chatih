@@ -3,6 +3,7 @@ library(bslib)
 library(ellmer)
 library(shinychat)
 library(querychat)
+library(ragnar)
 
 # Tools ------------------------------------------------------------------------
 # swap to appropriate data

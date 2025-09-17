@@ -43,6 +43,7 @@ Colonnes :
 - rum (INTEGER)
     Entier positif de 1 à N RUM.
 
+Before responding, retrieve relevant material from the knowledge store.
 
 Il y a plusieurs tâches qu'on pourrait vous demander de faire :
 

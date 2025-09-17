@@ -1,5 +1,5 @@
 library(ragnar)
-base_url <- "cim10.md"
+base_url <- "cim10_raw.md"
 # pages <- ragnar_find_links(base_url, children_only = TRUE)
 
 store_location <- here::here("cim10.ragnar.duckdb")
