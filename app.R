@@ -1,6 +1,5 @@
 library(shiny)
 library(bslib)
-library(beepr)
 library(ellmer)
 library(shinychat)
 library(querychat)
