@@ -3,73 +3,51 @@ library(bslib)
 library(beepr)
 library(ellmer)
 library(shinychat)
+library(querychat)
 
 # Tools ------------------------------------------------------------------------
-
-#' Plays a sound effect.
-#'
-#' @param sound Which sound effect to play: `"correct"`, `"incorrect"`,
-#'   `"new-round"`, or `"you-win"`.
-#' @returns A confirmation that the sound was played.
-play_sound <- function(
-  sound = c("correct", "incorrect", "new-round", "you-win")
-) {
-  sound <- match.arg(sound)
-
-  switch(
-    sound,
-    correct = beepr::beep("coin"),
-    incorrect = beepr::beep("wilhelm"),
-    "new-round" = beepr::beep("fanfare"),
-    "you-win" = beepr::beep("mario")
-  )
-
-  glue::glue("The '{sound}' sound was played.")
-}
-
-tool_play_sound <- tool(
-  play_sound,
-  description = "Play a sound effect",
-  arguments = list(
-    sound = type_enum(
-      c("correct", "incorrect", "new-round", "you-win"),
-      description = paste(
-        "Which sound effect to play.",
-        "Play 'new-round' after the user picks a theme for the round.",
-        "Play 'correct' or 'incorrect' after the user answers a question.",
-        "Play 'you-win' at the end of a round of questions."
-      )
-    )
-  )
-)
+# swap to appropriate data
+demo_data <- mtcars
 
 # UI ---------------------------------------------------------------------------
 
 ui <- page_fillable(
+  card(
+    fill = FALSE,
+    max_height = "400px",
+    full_screen = TRUE,
+    card_body(
+      padding = 0,
+      navset_card_underline(
+        nav_spacer(),
+        nav_panel(
+          "SQL",
+          icon = fontawesome::fa_i("terminal"),
+          uiOutput("ui_sql")
+        )
+      )
+    )
+  ),
   chat_mod_ui("chat")
 )
-
 # Server -----------------------------------------------------------------------
 
 server <- function(input, output, session) {
-  client <- chat(
-    "anthropic/claude-3-7-sonnet-20250219",
+  chat_client <- chat_anthropic(
+    model = "claude-sonnet-4-20250514",
     system_prompt = interpolate_file(
-      # Replace `_solutions` with `_exercises` to get your own prompt from before
-      here::here("_solutions/14_quiz-game-1/prompt.md")
+      here::here("prompt.md")
     )
   )
 
-  client$register_tool(tool_play_sound)
+  chat <- chat_mod_server("chat", chat_client)
 
-  chat <- chat_mod_server("chat", client)
-
-  observe({
-    # Start the game when the app launches
-    chat$update_user_input(
-      value = "Let's play the quiz game!",
-      submit = TRUE
-    )
+  output$ui_sql <- renderUI({
+    sql <- NULL # recupérer ici le SQL poussé par chat
+    if (!isTruthy(sql)) {
+      sql <- "SELECT * FROM demo_data"
+    }
+    HTML(paste0("<pre><code>", sql, "</code></pre>"))
   })
 }
 
