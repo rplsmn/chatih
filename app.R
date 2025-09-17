@@ -6,7 +6,10 @@ library(querychat)
 
 # Tools ------------------------------------------------------------------------
 # swap to appropriate data
-demo_data <- mtcars
+store <- ragnar_store_connect(
+  here::here("cim10.ragnar.duckdb"),
+  read_only = TRUE
+)
 
 # UI ---------------------------------------------------------------------------
 
@@ -38,6 +41,8 @@ server <- function(input, output, session) {
       here::here("prompt.md")
     )
   )
+
+  ragnar_register_tool_retrieve(chat_client, store, top_k = 10)
 
   chat <- chat_mod_server("chat", chat_client)
 

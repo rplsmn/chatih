@@ -1,3 +1,5 @@
+# DuckDB files
+*.duckdb
 
 # Env files
 .env 
