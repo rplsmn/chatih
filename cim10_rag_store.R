@@ -2,7 +2,7 @@ library(ragnar)
 # cim10_app <- readRDS("data/cim10_app.rds")
 # cim_10_categories <- readRDS("data/cim10_categories.rds")
 
-path_pdf <- here::here("data/cim10_pdf_demo.pdf")
+path_pdf <- here::here("data/cim10_pdf_full.pdf")
 pages <- read_as_markdown(path_pdf)
 # Alternative with pdftools
 # pages2 <- pdftools::pdf_text(path_pdf)
@@ -38,8 +38,8 @@ ragnar_store_build_index(store)
 # test it
 
 ragnar_retrieve(store, "diabete", top_k = 3) |> dplyr::pull(text)
-ragnar_retrieve_vss(store, "diabete", top_k = 5)
-ragnar_retrieve_bm25(store, "diabete", top_k = 5)
+ragnar_retrieve_vss(store, "diabete", top_k = 3)
+ragnar_retrieve_bm25(store, "diabete", top_k = 3)
 
 chat <- ellmer::chat(
   name = "openai/gpt-4.1-nano",
